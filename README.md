@@ -19,7 +19,7 @@ FastAPI + PostgreSQL + Redis 조합 실습
 
 ✅ 회원가입 API 만들기 (비밀번호 해싱 포함)
 
-4. JWT 토큰 발급 & 검증
+✅ JWT 토큰 발급 & 검증
 
 5. Redis 연동해서 토큰 저장/만료 관리
 
