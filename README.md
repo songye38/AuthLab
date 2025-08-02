@@ -13,9 +13,9 @@ FastAPI + PostgreSQL + Redis 조합 실습
 최소한의 UI (React)에서 로그인 폼과 로그아웃 버튼
 
 ## 대략적인 개발 순서
-1. FastAPI 프로젝트 세팅
+✅ FastAPI 프로젝트 세팅
 
-2. PostgreSQL에 User 모델 만들기
+✅ PostgreSQL에 User 모델 만들기
 
 3. 회원가입 API 만들기 (비밀번호 해싱 포함)
 
