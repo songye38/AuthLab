@@ -14,7 +14,7 @@ const MePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get<User>("https://authlab-server-production.up.railway.app/me", { withCredentials: true })
+    axios.get<User>("https://authlab-server-production.up.railway.app/users/me", { withCredentials: true })
       .then(res => {
     console.log(res);
     setUser(res.data);

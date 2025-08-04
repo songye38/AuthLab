@@ -17,7 +17,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     const response = await axios.post(
-      "https://authlab-server-production.up.railway.app/login",
+      "https://authlab-server-production.up.railway.app/users/login",
       { email, password },
       { 
         headers: { "Content-Type": "application/json" },
