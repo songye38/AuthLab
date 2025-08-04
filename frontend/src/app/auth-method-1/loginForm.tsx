@@ -19,15 +19,20 @@ const handleSubmit = async (e: React.FormEvent) => {
     const response = await axios.post(
       "https://authlab-server-production.up.railway.app/login",
       { email, password },
-      { headers: { "Content-Type": "application/json" } }  // 명시적으로 Content-Type 지정
+      { 
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,  // 쿠키 포함시키기 위한 옵션
+      }
     );
 
     console.log("response.status:", response.status);
     console.log("response.data:", response.data);
 
-    const { access_token } = response.data;
-    setToken(access_token);
-    console.log("✅ Token:", access_token);
+    // setToken(access_token);  // 이 부분 삭제!
+
+    // 로그인 성공 후 /me 페이지로 이동 (예시)
+    window.location.href = "/me";
+
   } catch (err) {
     if (axios.isAxiosError(err)) {
       console.error("❌ Login failed response:", err.response);
@@ -38,6 +43,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   }
 };
+
 
 
 
