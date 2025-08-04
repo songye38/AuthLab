@@ -16,9 +16,9 @@ const MePage: React.FC = () => {
   useEffect(() => {
     axios.get<User>("https://authlab-server-production.up.railway.app/users/me", { withCredentials: true })
       .then(res => {
-    console.log(res);
-    setUser(res.data);
-  })
+        console.log(res);
+        setUser(res.data);
+      })
       .catch(() => setError("인증 실패 또는 서버 에러"));
   }, []);
 
@@ -30,6 +30,24 @@ const MePage: React.FC = () => {
       <h2>내 정보</h2>
       <p>이메일: {user.email}</p>
       {/* 필요한 정보 더 보여주기 */}
+
+      <button
+        onClick={async () => {
+          try {
+            const res = await fetch("https://authlab-server-production.up.railway.app/users/logout", {
+              method: "POST",
+              credentials: "include",
+            });
+            if (!res.ok) throw new Error("로그아웃 실패");
+            console.log("로그아웃 성공");
+          } catch (error) {
+            console.error("로그아웃 중 에러 발생:", error);
+          }
+        }}
+      >
+        로그아웃
+      </button>
+
     </div>
   );
 };
