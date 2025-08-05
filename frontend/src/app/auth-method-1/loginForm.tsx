@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
         }
       } catch (err) {
         // 로그인 안 되어 있음 (silent fail)
-        console.log("Not logged in");
+        console.log("Not logged in",err);
       }
     };
 
