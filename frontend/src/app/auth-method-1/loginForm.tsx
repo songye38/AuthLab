@@ -1,51 +1,62 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // ✅ 로그인 여부 확인용
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const res = await axios.get("https://authlab-server-production.up.railway.app/users/me", {
+          withCredentials: true, // 쿠키 포함
+        });
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError(null);
-
-  try {
-    const response = await axios.post(
-      "https://authlab-server-production.up.railway.app/users/login",
-      { email, password },
-      { 
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,  // 쿠키 포함시키기 위한 옵션
+        if (res.status === 200) {
+          // 이미 로그인된 상태면 바로 /me로 이동
+          window.location.href = "/me";
+        }
+      } catch (err) {
+        // 로그인 안 되어 있음 (silent fail)
+        console.log("Not logged in");
       }
-    );
+    };
 
-    console.log("response.status:", response.status);
-    console.log("response.data:", response.data);
+    checkLogin();
+  }, []);
 
-    // setToken(access_token);  // 이 부분 삭제!
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-    // 로그인 성공 후 /me 페이지로 이동 (예시)
-    window.location.href = "/me";
+    try {
+      const response = await axios.post(
+        "https://authlab-server-production.up.railway.app/users/login",
+        { email, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
 
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      console.error("❌ Login failed response:", err.response);
-      setError("이메일 또는 비밀번호가 올바르지 않습니다.");
-    } else {
-      console.error("❌ Unexpected error:", err);
-      setError("알 수 없는 에러가 발생했습니다.");
+      console.log("로그인 성공:", response.data);
+
+      // 로그인 성공 시 이동
+      window.location.href = "/me";
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error("Login failed:", err.response);
+        setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+      } else {
+        console.error("Unexpected error:", err);
+        setError("알 수 없는 에러가 발생했습니다.");
+      }
     }
-  }
-};
-
-
-
+  };
 
   return (
     <div style={styles.container}>
@@ -69,14 +80,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         />
         <button type="submit" style={styles.button}>로그인</button>
       </form>
-
       {error && <p style={styles.error}>{error}</p>}
-      {token && (
-        <div style={styles.tokenBox}>
-          <strong>Access Token:</strong>
-          <pre>{token}</pre>
-        </div>
-      )}
     </div>
   );
 };
@@ -114,14 +118,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   error: {
     marginTop: 12,
     color: "crimson",
-  },
-  tokenBox: {
-    marginTop: 20,
-    background: "#f7f7f7",
-    padding: 10,
-    borderRadius: 8,
-    fontSize: 12,
-    wordBreak: "break-word",
   },
 };
 

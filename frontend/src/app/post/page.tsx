@@ -36,7 +36,7 @@ const CreatePost: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("글 작성에 실패했어ㅠ");
+        throw new Error("로그인부터 다시~!!! 로그아웃되었으면 글 쓸 수 없어!!");
       }
 
       setSuccess(true);
