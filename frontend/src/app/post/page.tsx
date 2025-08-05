@@ -41,8 +41,12 @@ const CreatePost: React.FC = () => {
 
       setSuccess(true);
       setPost({ title: "", content: "" });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("알 수 없는 에러가 발생했어!");
+      }
     } finally {
       setLoading(false);
     }
