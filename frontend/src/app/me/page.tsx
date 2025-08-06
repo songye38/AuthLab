@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 
 interface User {
   email: string;
@@ -19,21 +19,42 @@ const MePage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
 
-  useEffect(() => {
-    axios.get<User>("https://authlab-server-production.up.railway.app/users/me", { withCredentials: true })
-      .then(res => setUser(res.data))
-      .catch(() => setError("인증 실패 또는 서버 에러"));
-  }, []);
 
-  useEffect(() => {
-    if (!user) return;
+  //기존 axios 인스턴스 사용 버전
+  // useEffect(() => {
+  //   axios.get<User>("https://authlab-server-production.up.railway.app/users/me", { withCredentials: true })
+  //     .then(res => setUser(res.data))
+  //     .catch(() => setError("인증 실패 또는 서버 에러"));
+  // }, []);
 
-    setLoadingPosts(true);
-    axios.get<Post[]>("https://authlab-server-production.up.railway.app/posts/mine", { withCredentials: true })
-      .then(res => setPosts(res.data))
-      .catch(() => setError("내 게시글을 불러오지 못했습니다."))
-      .finally(() => setLoadingPosts(false));
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) return;
+
+  //   setLoadingPosts(true);
+  //   axios.get<Post[]>("https://authlab-server-production.up.railway.app/posts/mine", { withCredentials: true })
+  //     .then(res => setPosts(res.data))
+  //     .catch(() => setError("내 게시글을 불러오지 못했습니다."))
+  //     .finally(() => setLoadingPosts(false));
+  // }, [user]);
+
+  // 유저 정보 요청
+useEffect(() => {
+  api.get<User>("/users/me")
+    .then(res => setUser(res.data))
+    .catch(() => setError("인증 실패 또는 서버 에러"));
+}, []);
+
+// 내 게시글 요청
+useEffect(() => {
+  if (!user) return;
+
+  setLoadingPosts(true);
+  api.get<Post[]>("/posts/mine")
+    .then(res => setPosts(res.data))
+    .catch(() => setError("내 게시글을 불러오지 못했습니다."))
+    .finally(() => setLoadingPosts(false));
+}, [user]);
+
 
   if (error) return <div style={styles.error}>{error}</div>;
   if (!user) return <div style={styles.loading}>로딩 중...</div>;
